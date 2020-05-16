@@ -5,7 +5,6 @@ import { createTestConn } from "../../../testSetup/createTestConn";
 import { TestClient } from "../../../utils/TestClient";
 import { confirmEmailError, invalidLogin } from "./errorMessages";
 
-// tslint:disable-next-line: prefer-const
 let conn: Connection;
 faker.seed(Date.now() + 1);
 
@@ -14,7 +13,7 @@ const password = faker.internet.password();
 const client = new TestClient(process.env.TEST_HOST as string);
 
 beforeAll(async () => {
-  await createTestConn();
+  conn = await createTestConn();
 });
 
 afterAll(async () => {
