@@ -1,11 +1,10 @@
-import * as request from "request-promise";
-// tslint:disable-next-line: no-implicit-dependencies
-import * as rq from "request";
+import * as rp from "request-promise";
+import * as request from "request";
 
 export class TestClient {
   url: string;
   options: {
-    jar: rq.CookieJar;
+    jar: request.CookieJar;
     withCredentials: boolean;
     json: boolean;
   };
@@ -14,13 +13,13 @@ export class TestClient {
     this.url = url;
     this.options = {
       withCredentials: true,
-      jar: request.jar(),
+      jar: rp.jar(),
       json: true,
     };
   }
 
   async logout() {
-    return request.post(this.url, {
+    return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
@@ -33,7 +32,7 @@ export class TestClient {
   }
 
   async register(email: string, password: string) {
-    return request.post(this.url, {
+    return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
@@ -49,7 +48,7 @@ export class TestClient {
   }
 
   async me() {
-    return request.post(this.url, {
+    return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
@@ -65,7 +64,7 @@ export class TestClient {
   }
 
   async forgotPasswordChange(newPassword: string, key: string) {
-    return request.post(this.url, {
+    return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
@@ -81,7 +80,7 @@ export class TestClient {
   }
 
   async login(email: string, password: string) {
-    return request.post(this.url, {
+    return rp.post(this.url, {
       ...this.options,
       body: {
         query: `

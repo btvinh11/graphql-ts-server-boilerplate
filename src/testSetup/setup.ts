@@ -1,5 +1,5 @@
 import { startServer } from "../startServer";
-import { AddressInfo } from "dgram";
+import { AddressInfo } from "net";
 
 export const setup = async () => {
   const app = await startServer();
