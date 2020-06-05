@@ -1,22 +1,36 @@
-import * as SparkPost from "sparkpost";
-const client = new SparkPost(process.env.SPARKPOST_API_KEY);
+import * as nodemailer from "nodemailer";
 
 export const sendEmail = async (recipient: string, url: string) => {
-  const response = await client.transmissions.send({
-    options: {
-      sandbox: true,
+  const testAccount = await nodemailer.createTestAccount();
+
+  // create reusable transporter object using the default SMTP transport
+  const transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: testAccount.user, // generated ethereal user
+      pass: testAccount.pass, // generated ethereal password
     },
-    content: {
-      from: "testing@sparkpostbox.com",
-      subject: "Confirm Email",
-      html: `<html>
-            <body>
-            <p>Testing SparkPost - the world's most awesomest email service!</p>
-            <a href="${url}">confirm email</a>
-            </body>
-        </html>`,
-    },
-    recipients: [{ address: recipient }],
   });
-  console.log(response);
+
+  // send mail with defined transport object
+  const info = await transporter.sendMail({
+    from: "Airbnb <airbnb@abb.com>", // sender address
+    to: `Recipient <${recipient}>`, // list of receivers
+    subject: "Confirm", // Subject line
+    text: "Hello,", // plain text body
+    html: `<html>
+              <body>
+              <a href="${url}"></a>
+              </body>
+           </html>`,
+  });
+
+  console.log("Message sent: %s", info.messageId);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+  // Preview only available when sending through an Ethereal account
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 };
