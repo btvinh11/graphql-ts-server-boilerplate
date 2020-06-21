@@ -1,5 +1,4 @@
 import * as bcrypt from "bcryptjs";
-import { userSessionIdPredix } from "../../../constants";
 import { User } from "../../../entity/User";
 import { ResolverMap } from "../../../types/graphql-utils";
 import {
@@ -7,6 +6,7 @@ import {
   forgotPasswordLockError,
   invalidLogin,
 } from "./errorMessages";
+import { userSessionIdPrefix } from "../../../constants";
 
 const errorResponse = [
   {
@@ -55,7 +55,7 @@ export const resolvers: ResolverMap = {
       // login successful
       session.userId = user.id;
       if (req.sessionID) {
-        await redis.lpush(`${userSessionIdPredix}${user.id}`, req.sessionID);
+        await redis.lpush(`${userSessionIdPrefix}${user.id}`, req.sessionID);
       }
 
       return null;
