@@ -6,7 +6,7 @@ import { createTestConn } from "../../../testSetup/createTestConn";
 import { createForgotPasswordLink } from "../../../utils/createForgotPasswordLink";
 import { forgotPasswordLockAccount } from "../../../utils/forgotPasswordLockAccount";
 import { TestClient } from "../../../utils/TestClient";
-import { forgotPasswordLockError } from "../login/errorMessages";
+import { forgotPasswordLockedError } from "../login/errorMessages";
 import { expiredKeyError, passwordlNotLongEnough } from "./errorMessages";
 
 let userId: string;
@@ -48,7 +48,7 @@ describe("forgot password", () => {
         login: [
           {
             path: "email",
-            message: forgotPasswordLockError,
+            message: forgotPasswordLockedError,
           },
         ],
       },
