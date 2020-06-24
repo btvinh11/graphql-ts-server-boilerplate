@@ -3,7 +3,7 @@ import { User } from "../../../entity/User";
 import { ResolverMap } from "../../../types/graphql-utils";
 import {
   confirmEmailError,
-  forgotPasswordLockError,
+  forgotPasswordLockedError,
   invalidLogin,
 } from "./errorMessages";
 import { userSessionIdPrefix } from "../../../constants";
@@ -41,7 +41,7 @@ export const resolvers: ResolverMap = {
         return [
           {
             path: "email",
-            message: forgotPasswordLockError,
+            message: forgotPasswordLockedError,
           },
         ];
       }
