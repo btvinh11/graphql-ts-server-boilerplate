@@ -1,6 +1,10 @@
 import "reflect-metadata";
 import "dotenv/config";
-import { GraphQLServer } from "graphql-yoga";
+import { ApolloServer } from "apollo-server-express";
+import * as cors from "cors";
+import * as express from "express";
+import * as http from "http";
+
 import * as session from "express-session";
 import * as connectRedis from "connect-redis";
 import * as rateLimit from "express-rate-limit";
@@ -20,18 +24,34 @@ export const startServer = async () => {
   if (process.env.NODE_ENV === "test") {
     await redis.flushall();
   }
-  const schema: any = genSchema();
-  const server = new GraphQLServer({
+
+  const schema = genSchema();
+  const server = new ApolloServer({
+    subscriptions: {
+      path: "/",
+    },
     schema,
-    context: ({ request }) => ({
+    context: ({ req }) => ({
       redis,
-      url: request.protocol + "://" + request.get("host"),
-      session: request.session,
-      req: request,
+      url: req.protocol + "://" + req.get("host"),
+      session: req.session,
+      req,
     }),
   });
 
-  server.express.use(
+  const app = express();
+
+  app.use(
+    cors({
+      credentials: true,
+      origin:
+        process.env.NODE_ENV === "test"
+          ? "*"
+          : (process.env.FRONTEND_HOST as string),
+    })
+  );
+
+  app.use(
     rateLimit({
       store: new rateLimitRedisStore({
         client: redis,
@@ -41,7 +61,7 @@ export const startServer = async () => {
     })
   );
 
-  server.express.use(
+  app.use(
     session({
       store: new RedisStore({ client: redis, prefix: redisSessionPrefix }),
       name: "qid",
@@ -50,21 +70,14 @@ export const startServer = async () => {
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        // secure: process.env.NODE_ENV === "production",
+        secure: false,
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       },
     })
   );
 
-  const cors = {
-    credentials: true,
-    origin:
-      process.env.NODE_ENV === "test"
-        ? "*"
-        : (process.env.FRONTEND_HOST as string),
-  };
-
-  server.express.get("/confirm/:id", confirmEmail);
+  app.get("/confirm/:id", confirmEmail);
 
   if (process.env.NODE_ENV === "test") {
     await createTestConn(true);
@@ -72,12 +85,21 @@ export const startServer = async () => {
     await createTypeormConn();
   }
 
-  const port = process.env.PORT || 4000;
-  const app = await server.start({
-    cors,
-    port: process.env.NODE_ENV === "test" ? 0 : port,
+  server.applyMiddleware({
+    app,
+    cors: false,
+    path: "/",
   });
-  console.log("Server is running on localhost:4000");
 
-  return app;
+  const port =
+    process.env.NODE_ENV === "test" ? 1234 : process.env.PORT || 4000;
+
+  const httpServer = http.createServer(app);
+  server.installSubscriptionHandlers(httpServer);
+
+  httpServer.listen(port, () =>
+    console.log(`Server is running on localhost:${port}`)
+  );
+
+  return { app, port };
 };
