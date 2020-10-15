@@ -7,7 +7,7 @@ A GraphQL Server boilerplate made with Typescript, PostgreSQL, and Redis
 1. Clone project
 
 ```
-git clone https://github.com/btvinh11/graphql-ts-server-boilerplate.git
+git clone https://github.com/vinhbhn/graphql-ts-server-boilerplate.git
 ```
 
 2. cd into folder
