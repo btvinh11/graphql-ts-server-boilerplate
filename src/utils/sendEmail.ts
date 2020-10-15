@@ -19,12 +19,10 @@ export const sendEmail = async (recipient: string, url: string) => {
     from: "Airbnb <airbnb@abb.com>", // sender address
     to: `Recipient <${recipient}>`, // list of receivers
     subject: "Confirm", // Subject line
-    text: "Hello,", // plain text body
-    html: `<html>
-              <body>
-              <a href="${url}"></a>
-              </body>
-           </html>`,
+    text: `Hello`, // plain text body
+    html: `<p><b>Hello, </b></p>
+    <a href="${url}">Confirm</a>
+    `,
   });
 
   console.log("Message sent: %s", info.messageId);
