@@ -7,7 +7,7 @@ import {
   duplicateEmail,
   emailNotLongEnough,
   invalidEmail,
-  passwordlNotLongEnough,
+  passwordNotLongEnough,
 } from "./errorMessages";
 
 let conn: Connection;
@@ -66,7 +66,7 @@ describe("Register user", () => {
       register: [
         {
           path: "password",
-          message: passwordlNotLongEnough,
+          message: passwordNotLongEnough,
         },
       ],
     });
@@ -86,7 +86,7 @@ describe("Register user", () => {
         },
         {
           path: "password",
-          message: passwordlNotLongEnough,
+          message: passwordNotLongEnough,
         },
       ],
     });

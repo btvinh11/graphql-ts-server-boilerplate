@@ -18,7 +18,7 @@ export const resolvers: ResolverMap = {
     sendForgotPasswordEmail: async (
       _,
       { email }: GQL.ISendForgotPasswordEmailOnMutationArguments,
-      { redis }
+      { redis, url }
     ) => {
       const user = await User.findOne({ where: { email } });
       if (!user) {
@@ -32,7 +32,7 @@ export const resolvers: ResolverMap = {
 
       await forgotPasswordLockAccount(user.id, redis);
       // @todo add frontend url
-      await createForgotPasswordLink("", user.id, redis);
+      await createForgotPasswordLink(url, user.id, redis);
       // @send email with url
       return true;
     },

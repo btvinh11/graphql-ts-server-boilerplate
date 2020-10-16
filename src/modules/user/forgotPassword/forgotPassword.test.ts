@@ -7,7 +7,7 @@ import { createForgotPasswordLink } from "../../../utils/createForgotPasswordLin
 import { forgotPasswordLockAccount } from "../../../utils/forgotPasswordLockAccount";
 import { TestClient } from "../../../utils/TestClient";
 import { forgotPasswordLockedError } from "../login/errorMessages";
-import { expiredKeyError, passwordlNotLongEnough } from "./errorMessages";
+import { expiredKeyError, passwordNotLongEnough } from "./errorMessages";
 
 let userId: string;
 const redis = new Redis();
@@ -60,7 +60,7 @@ describe("forgot password", () => {
         forgotPasswordChange: [
           {
             path: "newPassword",
-            message: passwordlNotLongEnough,
+            message: passwordNotLongEnough,
           },
         ],
       },

@@ -1,7 +1,7 @@
 import * as yup from "yup";
-import { passwordlNotLongEnough } from "./modules/user/register/errorMessages";
+import { passwordNotLongEnough } from "./modules/user/register/errorMessages";
 
 export const registerPasswordValidation = yup
   .string()
-  .min(3, passwordlNotLongEnough)
+  .min(3, passwordNotLongEnough)
   .max(255);
