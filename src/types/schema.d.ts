@@ -20,17 +20,6 @@ line: number;
 column: number;
 }
 
-interface IQuery {
-__typename: "Query";
-me: IUser | null;
-}
-
-interface IUser {
-__typename: "User";
-id: string;
-email: string;
-}
-
 interface IMutation {
 __typename: "Mutation";
 sendForgotPasswordEmail: boolean | null;
@@ -59,10 +48,21 @@ email: string;
 password: string;
 }
 
+interface IQuery {
+__typename: "Query";
+me: IUser | null;
+}
+
 interface IError {
 __typename: "Error";
 path: string;
 message: string;
+}
+
+interface IUser {
+__typename: "User";
+id: string;
+email: string;
 }
 }
 
