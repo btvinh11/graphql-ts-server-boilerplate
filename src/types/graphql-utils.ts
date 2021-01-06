@@ -1,6 +1,7 @@
 import { Redis } from "ioredis";
+import * as Expresses from 'express-session';
 
-export interface Session extends Express.Session {
+export interface Session extends Expresses.Session {
   userId?: string;
 }
 
