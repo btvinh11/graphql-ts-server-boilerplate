@@ -7,3 +7,4 @@ temp/
 *.log
 dump.rbd
 tslint-to-eslint-config.log
+dump.rdb
